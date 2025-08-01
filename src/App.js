@@ -1,23 +1,42 @@
-import logo from './logo.svg';
+// App.js
+import React, { useState, useEffect } from 'react';
+import Login from './components/Login';
+import Signup from './components/Signup';
+import Dashboard from './components/Dashboard';
 import './App.css';
 
 function App() {
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isLogin, setIsLogin] = useState(true);
+
+  useEffect(() => {
+    const storedUser = localStorage.getItem('loggedInUser');
+    if (storedUser) {
+      setCurrentUser(JSON.parse(storedUser));
+    }
+  }, []);
+
+  const handleLogin = (user) => {
+    localStorage.setItem('loggedInUser', JSON.stringify(user));
+    setCurrentUser(user);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('loggedInUser');
+    setCurrentUser(null);
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div className="app-container">
+      {currentUser ? (
+        <Dashboard user={currentUser} onLogout={handleLogout} />
+      ) : (
+        isLogin ? (
+          <Login onLogin={handleLogin} onSwitch={() => setIsLogin(false)} />
+        ) : (
+          <Signup onSignup={handleLogin} onSwitch={() => setIsLogin(true)} />
+        )
+      )}
     </div>
   );
 }
