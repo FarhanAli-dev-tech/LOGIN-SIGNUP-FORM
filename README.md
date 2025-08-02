@@ -14,5 +14,5 @@ A full authentication form system in React with field validation, reusable compo
 
 ## How to Run
 
-  npm install
-  npm start
+- npm install
+- npm start
